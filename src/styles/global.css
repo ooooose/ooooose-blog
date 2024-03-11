@@ -11,6 +11,11 @@ body {
   line-height: 1.5;
 }
 
+main {
+  margin: 0 auto;
+  text-align: center;
+}
+
 * {
   box-sizing: border-box;
 }
