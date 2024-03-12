@@ -10,9 +10,3 @@ const { frontmatter } = Astro.props;
   <img src={frontmatter.image.url} width="300" alt={frontmatter.image.alt} />
   <slot />
 </Layout>
-
-<style>
-  img {
-    max-width: 400px;
-  }
-</style>
