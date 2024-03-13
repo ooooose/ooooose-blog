@@ -1,7 +1,26 @@
 ---
-
+import GithubLogo from "./logos/GithubLogo.astro"
+import NoteLogo from "./logos/NoteLogo.astro"
+import XLogo from "./logos/XLogo.astro"
+import ZennLogo from "./logos/ZennLogo.astro"
+import QiitaLogo from "./logos/QiitaLogo.astro"
+import { GITHUB_URL, NOTE_URL, X_URL, QIITA_URL, ZENN_URL } from "../consts/url";
 ---
 
-<div>
-  <p>SNS </p>
+<div class="flex justify-end gap-3 mt-4">
+  <p>SocialLinks - </p>
+  <div class="flex gap-3">
+    <a href={GITHUB_URL} target="_blank">
+      <GithubLogo width={30} height={30} />
+    </a>
+    <a href={NOTE_URL} target="_blank">
+      <NoteLogo width={30} height={30} />
+    </a>
+    <a href={X_URL} target="_blank">
+      <XLogo  />
+    </a>
+    <a href={QIITA_URL} target="_blank">
+      <QiitaLogo />
+    </a>
+  </div>
 </div>

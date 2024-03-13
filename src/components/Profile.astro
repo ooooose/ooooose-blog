@@ -1,18 +1,15 @@
 ---
 import Icon from './Icon.astro'
-
+import BreadCrum from './BreadCrum.astro'
 ---
 
 <div class="h-[300px] border-b border-gray-300">
-    <div class="h-[30px] leading-[30px] text-left">
-      <p><a href="/" class="text-blue-400">Home</a> > About</p>
-      <h3 class="font-extrabold text-xl">About</h3>
-    </div>
+    <BreadCrum currentPath='About' />
     <Icon />
-    <div class="text-left max-w-[600px] mx-auto">
+    <div class="text-center max-w-[600px] mx-auto">
       <p>
-        Hi, my name is Yuuki Oose. I'm Web Engineer living in Tokyo, Japan. <br />
-        I am a fan of web development, reading and playing badmington. 
+        都内受託企業でwebエンジニアをやっています。<br />
+        個人開発のほかにも読書、バドミントンが趣味です。<br />
       </p>
     </div>
 </div>
