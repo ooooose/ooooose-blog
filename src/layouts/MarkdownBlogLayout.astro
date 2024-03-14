@@ -1,0 +1,14 @@
+---
+import Layout from "./Layout.astro";
+const { frontmatter } = Astro.props;
+---
+
+<Layout pageTitle={frontmatter.title}>
+  <div class="text-left my-10">
+    <p class="py-2">{frontmatter.pubDate.slice(0, 10)}</p>
+    <p class="py-2"><em>{frontmatter.description}</em></p>
+    <p class="py-3">Written by: {frontmatter.author}</p>
+    <img src={frontmatter.image.url} width="300" alt={frontmatter.image.alt} />
+    <slot />
+  </div>
+</Layout>

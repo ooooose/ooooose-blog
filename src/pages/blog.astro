@@ -8,7 +8,7 @@ import BreadCrum from "../components/BreadCrum.astro"
 <Layout>
   <div class="h-[300px]">
     <BreadCrum currentPath='Blog' />
-    <ul class="list-none mt-10 text-left">
+    <ul class="list-none mt-10 text-left w-3/4 mx-auto">
       {allPosts.map((post) => <BlogPost post={post} />)}
     </ul>
   </div>
