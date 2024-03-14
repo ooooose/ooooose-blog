@@ -1,15 +1,12 @@
 ---
-const platform = "github";
-const username = "ooooose";
+import SocialLinks from "./SocialLinks.astro"
 ---
 
-<footer class="mx-auto max-w-screen-sm flex justify-end">
-  <p>
-    Learn more about me on
-    <a
-      href={`https://www.${platform}.com/${username}`}
-      target="_blank"
-      rel="noopener noreferrer">{platform}</a
-    >!
-  </p>
+<footer class="mx-auto max-w-screen-sm flex justify-between border-t border-gray-300 pt-2">
+  <div class="leading-[50px] text-sm">
+    Copyright © 2023
+     | 
+    All rights reserved.
+  </div>
+  <SocialLinks />
 </footer>

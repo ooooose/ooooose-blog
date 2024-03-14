@@ -1,7 +1,15 @@
 ---
 import Layout from "../layouts/Layout.astro"
+const allPosts = await Astro.glob("../pages/blogs/*.md");
+import BlogPost from "../components/BlogPost.astro";
+import BreadCrum from "../components/BreadCrum.astro"
 ---
 
 <Layout>
-  <div class="h-[300px]">ブログ作成中</div>
+  <div class="h-[300px]">
+    <BreadCrum currentPath='Blog' />
+    <ul class="list-none mt-10 text-left">
+      {allPosts.map((post) => <BlogPost post={post} />)}
+    </ul>
+  </div>
 </Layout> 
