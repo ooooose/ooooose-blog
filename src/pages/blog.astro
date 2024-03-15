@@ -1,15 +1,17 @@
 ---
 import Layout from "../layouts/Layout.astro"
-const allPosts = await Astro.glob("../pages/blogs/*.md");
+import { getAllBlogs } from "../repository/microcmsRepository";
 import BlogPost from "../components/BlogPost.astro";
 import BreadCrum from "../components/BreadCrum.astro"
+
+const res = await getAllBlogs({ fields: ["id", "title", "createdAt", "url"] });
 ---
 
 <Layout>
   <div class="h-[300px]">
     <BreadCrum currentPath='Blog' />
     <ul class="list-none mt-10 text-left w-3/4 mx-auto">
-      {allPosts.map((post) => <BlogPost post={post} />)}
+      {res.contents.map((blog: any) => <BlogPost blog={blog} />)}
     </ul>
   </div>
 </Layout> 

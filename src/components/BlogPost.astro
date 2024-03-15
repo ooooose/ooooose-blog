@@ -1,7 +1,7 @@
 ---
 import Card from "./Card.astro";
 
-const { post } = Astro.props;
+const { blog } = Astro.props;
 const emojis = [
   "😄",
   "😃",
@@ -826,8 +826,7 @@ const emojis = [
 ---
 
 <Card
-  title={post.frontmatter.title}
-  href={post.url}
-  description={post.frontmatter.description}
+  title={blog.title}
+  href={blog.url}
   emoji={emojis[Math.floor(Math.random() * emojis.length)]}
 />
