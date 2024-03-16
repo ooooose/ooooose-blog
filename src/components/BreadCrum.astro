@@ -1,0 +1,12 @@
+---
+export interface Props {
+  currentPath: string;
+}
+
+const { currentPath } = Astro.props;
+---
+
+<div class="h-[30px] leading-[30px] text-left">
+  <p><a href="/" class="text-blue-400">Home</a> >  {currentPath}</p>
+  <h3 class="font-extrabold text-xl">{currentPath}</h3>
+</div>
