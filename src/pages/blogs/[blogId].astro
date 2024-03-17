@@ -13,6 +13,8 @@ import {
 /** utils */
 import { formatDate } from "../../utils/formatDate";
 
+export const prerender = true;
+
 export async function getStaticPaths() {
   const res = await getAllBlogs({ fields: ["id"] });
   return res.contents.map((content) => {
@@ -35,7 +37,7 @@ if (blogId) {
 <Layout title="blog">
   <main class="text-left min-h-[400px]">
     <h1>{blogData ? blogData.title : ""}</h1>
-    <p>
+    <p class="mt-2">
       投稿日：{
         blogData ? new formatDate(blogData.revisedAt).toJpDateWithWeek() : ""
       }
