@@ -19,7 +19,7 @@ const { currentPage, totalPages, paginatedPosts } = Astro.props;
 
 <Layout title={`Posts | ${SITE.title}`}>
   <Header activeNav="posts" />
-  <Main pageTitle="Posts" pageDesc="All the articles I've posted.">
+  <Main pageTitle="投稿一覧" pageDesc="投稿したブログの一覧です">
     <ul>
       {
         paginatedPosts.map(({ data, slug }) => (
