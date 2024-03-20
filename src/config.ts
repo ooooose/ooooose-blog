@@ -1,11 +1,11 @@
 import type { Site, SocialObjects } from "./types";
 
 export const SITE: Site = {
-  website: "https://ooooose.com/",
+  website: "https://ooooose.com",
   author: "Yuuki Oose",
   desc: "都内Webエンジニアの技術ブログサイト",
-  title: "おーせ@tech",
-  ogImage: "astropaper-og.jpg",
+  title: "おーせンTech",
+  ogImage: "astropaper-logo.jpg",
   lightAndDarkMode: true,
   postPerPage: 3,
   scheduledPostMargin: 15 * 60 * 1000, // 15 minutes
