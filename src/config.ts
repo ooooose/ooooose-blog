@@ -4,7 +4,7 @@ export const SITE: Site = {
   website: "https://ooooose.com",
   author: "Yuuki Oose",
   desc: "都内Webエンジニアの技術ブログサイト",
-  title: "おーせンTech",
+  title: "おーせ・ン・Tech",
   ogImage: "astropaper-logo.jpg",
   lightAndDarkMode: true,
   postPerPage: 3,
