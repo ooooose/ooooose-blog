@@ -4,54 +4,90 @@ pubDatetime: 2024-03-24
 title: webpackからviteに乗り換え奮闘記(Laravel・Vite)
 slug: webpack-to-vite
 featured: true
-draft: false
+draft: true
 # ogImage: https://user-images.githubusercontent.com/53733092/215771435-25408246-2309-4f8b-a781-1f3d93bdf0ec.png
 tags:
   - Laravel
   - Vite
-description: Laravel・Vueの案件でwebpackからviteに乗り換えたので、その奮闘記を書き記します。
+description: Laravel・Vueのプロジェクトでwebpackからviteに乗り換えたので、その奮闘記を書き記します。
 ---
 
 ## はじめに
-以下のとおりプロジェクトで使用しているライブラリをアップデートを行いましたので、その備忘録を記録します。<br />
-特にwebpackからviteへは苦戦したので詳細に記載したいと思います。
+プロジェクト(Laravel)のモジュールバンドラーを`Webpack`から`Vite`に乗り換えたのでその備忘録として記載します。<br />
 
-| ライブラリ                | 旧           | 新                 |
-| ----------------------- | ------------ | ------------------ |
-| PHP                     | 8.1          | 8.3.3              |
-| composer                | 2.5          | 2.7.1              |
-| Vue                     | 2.x          | 3.x                |
-| CSS budler              | Webpack      | Vite               |
+## webpackからviteに移行する手順
+詳しくは[Readouble](https://readouble.com/laravel/10.x/ja/vite.html)に記載されている[移行ガイド](https://github.com/laravel/vite-plugin/blob/main/UPGRADE.md#migrating-from-laravel-mix-to-vite)通りに行いました。<br />
+行なったことは以下のとおりです。<br />
 
+- `Vite`と`Laravel`プラグインをインストールする
+- `Vite`の設定（`vite.config.js`の作成）
+- `package.json`(npmスクリプト)の更新
+- 環境変数の更新
+- `webpack`関連のライブラリをアンインストール
+- requireをimport文に修正
+- bladeに対してviteのディレクティブを記載・参照する。（`@vite('resources/js/app.js')`などの設定）
 
-## PHPのバージョンアップをした理由
-単純に運用しているアプリで使用しているPHPのバージョン、それに付随するライブラリのバージョンが古くなったため、という理由もありました。
-が、今回PHPのバージョンを上げた理由はPHP`8.2`からリリースされた`[\SensitivePrameter]`という機能を使いたいという明確な理由がありました。
-### `SensitivePrameter`とは
-詳しくは[リリースノート]()を見ていただければと思いますが、簡単に言いますとメソッドに渡した引数を秘匿するといった役割を果たします。
-例えば以下のような実装があるとします。
-```php
+## 実際の作業
+それぞれ簡単に説明していきます。
 
-```
-この実装について、`$hoge`という引数に対して`SensitiveParamer`を付与するとスタックトレースで以下のように出力されます。
+### `Vite`と`Laravel`プラグインをインストールする
+こちらは以下ライブラリ(`vite`、`laravel-vite-plugin`)のインストールをします。<br />
 ```zsh
-
+npm install --save-dev vite laravel-vite-plugin
 ```
-AWSなどのクラウドサービスを利用している場合だと`CloudFront`に出力されるログなどで出力したくない引数の内訳、例えばパスワードやメールアドレスなど秘匿情報を表示させたくないケースがあると思います。
-今回はクライアントから運用上そのような要望がありましたので、SensitiveParamerを使用できるPHP8.2以上であり、かつ当時安定版の最新版だった`PHP8.3.3`を選定してアップグレードしました。
-
-### 対応したこと
-こちらはDockerfileのPHPのバージョンを`8.3.3`に変更しただけです。元々が`8.1`だったので記述に大幅な変更はなかったです。<br />
-強いて言えば、DockerImageの選定に時間がかかったというか。こちらもDockerHub公式の情報からセキュリティ脆弱性が低く、かつ案件で使用しているOSのイメージを採用しました。<br />
-合わせてcomposerも`2.5`だったので、こちらも最新版の`2.7.1`に変更しましたが、その他に特段修正していません。<br />
-
-## Vueのバージョンアップ(2.x -> 3.x)
-PHP8系ではVue2系のサポートが終了した（要確認）ため、こちらもVue3にアップデートする必要がありました。<br />
-ただ、こちらも当初案件はVue3で実装していましたが、クライアントが使用するOSではうまく機能せずVue2系にダウングレードした経緯がありました。<br />
-なので、当初Vue3系で記載されていた内容ではあったので、Vue2からVue3にアップデートしたことで抜本的な修正は必要なかったです。<br />
-強いていうなら、CompositionsAPIを使用していたので別途`@compositionsApi`のライブラリをインストールしていたのですが、Vue3からデフォルトで設定されているのでライブラリのインポート先が変わるなどありました。<br />
-それぞれCompositionsAPIを呼び出している箇所を以下のように修正しました。<br />
-
+本プロジェクトでは`Vue`も使っていたので、`@vitejs/plugin-vue`のインストールを行いました。<br />
+```zsh
+npm install --save-dev @vitejs/plugin-vue
+```
+これらインストールしたライブラリをもとに`vite.config.js`を作成しました。
+### `Vite`の設定（`vite.config.js`の作成）
+Viteの設定を行うために、`vite.config.js`を作成し、以下のように記述します。
 ```javascript
+import { defineConfig } from "vite";
+import vue from '@vitejs/plugin-vue';
+import laravel from 'laravel-vite-plugin';
+import fs from "fs";
+import 'dotenv/config';
 
+const host = process.env.APP_DOMAIN ?? 'localhost';
+
+export default defineConfig({
+    server: {
+        host: host,
+        hmr: {
+            host
+        },
+        https: {
+            key: fs.readFileSync(`/etc/vite/ssl/local-key.pem`),
+            cert: fs.readFileSync(`/etc/vite/ssl/local-cert.pem`),
+        },
+        watch: {
+            usePolling: true,
+        }
+    },
+    plugins: [
+        vue({
+            template: {
+                transformAssetUrls: {
+                    base: null,
+                    includeAbsolute: false,
+                },
+            },
+        }),
+        laravel({
+            input: [
+                'resources/sass/app.scss',
+                'resources/js/app.ts',
+            ],
+            refresh: true,
+        }),
+    ],
+    resolve: {
+        alias: {
+            'vue': 'vue/dist/vue.esm-bundler.js',
+        },
+    },
+});
 ```
+
+それぞれのディレクティブでやっていることを簡単に触れてみます。
