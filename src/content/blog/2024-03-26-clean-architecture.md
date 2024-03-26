@@ -3,7 +3,7 @@ author: おーせ
 pubDatetime: 2024-03-26
 title: クリーンアーキテクチャについて少し考える
 slug: laravel-clean-architecture
-featured: true
+featured: false
 draft: false
 tags:
   - クリーンアーキテクチャ
@@ -56,6 +56,8 @@ public function delete(int $id): Task
 実務の中で以下の2点を注意されました。<br />
 - 返り値voidは極力避けること
 - 誰がみてもわかる名称にすること
+
+
 それぞれ振り返っていけたらと思います。
 
 #### 返り値voidは極力避ける
@@ -136,4 +138,5 @@ Usecase層は先述のとおり、**アプリケーションロジック**を実
 
 ## 最後に
 簡単に4層アーキテクチャそれぞれの役割と必要性について触れました。<br />
+最後Controller層の箇所は息切れしたけど、一旦ここまでとさせていただきます。<br />
 学んだことの簡単なメモ程度な記事ですが、これからも自分の考えをブログにアウトプットしていきます😀
