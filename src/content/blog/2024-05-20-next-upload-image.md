@@ -1,12 +1,13 @@
 ---
 author: おーせ
-pubDatetime: 2024-05-20
+pubDatetime: 2024-05-28
 title: Next.jsのRouteHandlerで画像アップロード（CloudflareR2）
 slug: next-upload-image
 featured: false
-draft: true
+draft: false
 tags:
   - Next.js
+  - Cloudflare
   - 画像アップロード
 description: Next.jsのアプリでCloudflareR2に画像アップロードする実装
 ---
@@ -138,7 +139,7 @@ const s3Client = new S3Client({
     })
 
 ```
-S3Clientに必要な情報をセットしてインスタンス化しており、バケット操作ができる準備を整える。
+S3Clientに必要な情報をセットしてインスタンス化しており、バケット操作ができる準備を整えます。
 
 ```typescript
     const fileName = `${Date.now()}-${id}-${name}`
@@ -155,14 +156,14 @@ S3Clientに必要な情報をセットしてインスタンス化しており、
     const command = new PutObjectCommand(uploadImage)
 ```
 `uploadImage`を定義。S3のライブラリにある`PutObjectCommand`を用いてバケットに送信する情報に整形する。
-（`uploadImage`で定義しているJSONのキーは全て大文字から始まるので注意。小文字だとエラーになる。）
+（`uploadImage`で定義しているJSONのキーは全て大文字から始まるので注意。小文字だとエラーになります（自分がなりました。。。））
 
 ```typescript
 await s3Client.send(command)
 ```
 
 最後にインスタンス化した`s3Client`によりバケットに格納情報を送信する処理を行えば、アップロード完了です。
-以下のコードはDb保存処理なので、今回は関係ないため説明割愛。
+以下のコードはDB保存処理なので、今回は関係ないため説明割愛します。
 ### Client側でFormDataを作成、送信
 Client側では以下のような画面を作成しました。
 [![Image from Gyazo](https://i.gyazo.com/304831abbc00d7460bfac9210e0cf961.png)](https://gyazo.com/304831abbc00d7460bfac9210e0cf961)
@@ -172,6 +173,8 @@ Client側では以下のような画面を作成しました。
 - APIエンドポイントに送信する。
 
 実際のコードは複数のファイルに分割しているし、今回の説明には不要な要素もありますが、ご容赦ください。
+
+#### `EditProfileModal.tsx`
 まずは画面で実装コードは以下のとおり、UIコンポーネントは`Shadcn/ui`でDialogを使用してます。
 
 ```typescript
@@ -318,7 +321,7 @@ const form = useForm<z.infer<typeof formSchema>>({
 
 ```
 
-その上で、以下の`FormField`の中のInput要素でfileを受け取り`{...form.register('image')}`という実装箇所で先ほどインスタンス化したformにfileを追加している。<br />
+その上で、以下の`FormField`の中のInput要素でfileを受け取り`{...form.register('image')}`という実装箇所で先ほどインスタンス化したformにfileを追加しています。<br />
 `previewImage(event)`の箇所はプレビュー画面を表示するために定義したuseStateの関数です。
 ```typescript
 <FormField
@@ -343,8 +346,8 @@ const form = useForm<z.infer<typeof formSchema>>({
 />
 ```
 
-登録した`form`を以下のコードで`onSubmit`関数を`handleSubmit`に読み込み、formに追加したオブジェクトを`onUpdate`に渡しています。
-`onUpdate`は別ファイルに記載しているので、後述。
+`form`のメソッドである`handleSubmit`で`onSubmit`に読み込み、その上でformに追加した値を`onSubmit`経由で`onUpdate`に渡しています。
+`onUpdate`は別ファイルに記載しているので、後述します。
 ```typescript
 
 function onSubmit(values: z.infer<typeof formSchema>) {
@@ -356,7 +359,9 @@ function onSubmit(values: z.infer<typeof formSchema>) {
 <form className='space-y-4' onSubmit={form.handleSubmit(onSubmit)}>
 ```
 
-`onUpdate`は以下の`useUpdateUser`というhooksで定義している。
+#### `userUpdateUser.ts`
+
+`onUpdate`は以下の`useUpdateUser`というhooksで定義しています。
 ```typescript
 import { ChangeEvent, useState } from 'react'
 import { toast } from 'sonner'
@@ -412,8 +417,8 @@ export const useUpdateUser = (user: AuthUser) => {
 
 ```
 
-抜粋すると以下の実装であり、`FormDataオブジェクト`を生成し、それにAPIのRequestBodyに含める要素（`id`, `name`, `image`）をそれぞれ追加。
-その上で`updateUser()`という処理の引数に含めることでAPIに通信しています。（これも別ファイルなので後述）
+抜粋すると以下の実装であり、`FormDataオブジェクト`を生成し、それにAPIのRequestBodyに含める要素（`id`, `name`, `image`）をそれぞれ追加します。
+その上で`updateUser()`という処理の引数に含めることでAPIに通信しています。（これも別ファイルなので後述します）
 ```typescript
 const onUpdate = async (body: { name: string; image: File }) => {
   try {
@@ -432,7 +437,9 @@ const onUpdate = async (body: { name: string; image: File }) => {
 }
 ```
 
-最後に`updateUser()`の実装内容を以下のとおり記載。
+#### `updateUser.ts`
+
+最後に`updateUser()`の実装内容を以下のとおり記載します。<br />
 fetchAPIの共通処理も別で書いていますが、以下コードブロックにまとめておきます。
 ```typescript
 import { apiClient } from '@/lib/api/api-client'
@@ -456,6 +463,6 @@ async apiPostFormData(url: string, body: FormData) {
 ```
 
 ## 最後に
-無駄な実装もあるかと思いますが、メモとして残しておこうかと思いました。
-誰かのお役に立てば嬉しいですが、結構ごちゃごちゃしているので役に立たないかも、、、
+無駄な実装もあるかと思いますが、メモとして残しておこうかと思いました。<br />
+誰かのお役に立てば嬉しいですが、結構ごちゃごちゃしているので役に立たないかも、、、<br />
 一応ソースは[こちら](https://github.com/ooooose/noteEditor)なので、もしよければ参照してください。
