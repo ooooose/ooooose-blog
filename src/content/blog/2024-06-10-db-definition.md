@@ -4,7 +4,7 @@ pubDatetime: 2024-07-18
 title: 正規化とインデックス付与の基準
 slug: db-definition-tips
 featured: false
-draft: false
+draft: true
 tags:
   - Database
   - 正規化
